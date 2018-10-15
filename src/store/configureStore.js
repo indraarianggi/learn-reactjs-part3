@@ -11,7 +11,14 @@ export default () => {
                 expenses: expensesReducer,
                 filters: filtersReducer
             }
-        )
+        ),
+
+        /*
+        ** [OPTIONAL]
+        ** Configuration for Redux Developer Tools (for browser extention)
+        ** https://github.com/zalmoxisus/redux-devtools-extension
+        */
+        window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__()
     );
 
     return store;
