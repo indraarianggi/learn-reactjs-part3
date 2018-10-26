@@ -11,4 +11,4 @@ const ExpenseListItem = ({ id, description, amount, createdAt }) => (
     </div>
 );
 
-export default connect()(ExpenseListItem);
+export default ExpenseListItem;
