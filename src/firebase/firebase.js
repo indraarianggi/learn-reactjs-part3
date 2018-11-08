@@ -13,6 +13,23 @@ const config = {
 firebase.initializeApp(config);
 
 // test
-firebase.database().ref().set({
-    name: 'Indra Arianggi'
+const database = firebase.database();
+database.ref().set({
+    name: 'Indra Arianggi',
+    age: 22,
+    isSingle: true,
+    location: {
+        city: 'Depok',
+        country: 'Indonesia'
+    }
+});
+
+// modify data
+database.ref('age').set(23);
+database.ref('location/city').set('Yogyakarta');
+
+// add new data object
+database.ref('attributes').set({
+    height: 185,
+    weight: 55
 });
