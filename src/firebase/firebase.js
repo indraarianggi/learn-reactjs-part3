@@ -1,4 +1,5 @@
 import * as firebase from 'firebase';
+import moment from 'moment';
 
 // Initialize Firebase
 const config = {
@@ -15,44 +16,44 @@ firebase.initializeApp(config);
 const database = firebase.database();
 
 // Set (add) data to database
-database.ref().set({
-    name: 'Indra Arianggi',
-    age: 22,
-    stressLevel: 6,
-    job: {
-        title: 'Software developer',
-        company: 'Google'
-    },
-    location: {
-        city: 'Depok',
-        country: 'Indonesia'
-    }
-}).then(() => {
-    console.log('Data is saved');
-}).catch((e) => {
-    console.log('This failed. ', e);
-});
+// database.ref().set({
+//     name: 'Indra Arianggi',
+//     age: 22,
+//     stressLevel: 6,
+//     job: {
+//         title: 'Software developer',
+//         company: 'Google'
+//     },
+//     location: {
+//         city: 'Depok',
+//         country: 'Indonesia'
+//     }
+// }).then(() => {
+//     console.log('Data is saved');
+// }).catch((e) => {
+//     console.log('This failed. ', e);
+// });
 
 // Update (modify) data
-database.ref().update(
-    {
-        stressLevel: 9,
-        'job/company': 'Amazon',
-        'location/city': 'Yogyakarta'
-    }
-).then(() => {
-    console.log('Data is updated');
-}).catch((e) => {
-    console.log('Update failed. ', e);
-});
+// database.ref().update(
+//     {
+//         stressLevel: 9,
+//         'job/company': 'Amazon',
+//         'location/city': 'Yogyakarta'
+//     }
+// ).then(() => {
+//     console.log('Data is updated');
+// }).catch((e) => {
+//     console.log('Update failed. ', e);
+// });
 
 // Delete data
-database.ref('isSingle').remove()
-        .then(() => {
-            console.log('isSingle property has been removed');
-        }).catch((e) => {
-            console.log('Remove failed. ', e);
-        });
+// database.ref('isSingle').remove()
+//         .then(() => {
+//             console.log('isSingle property has been removed');
+//         }).catch((e) => {
+//             console.log('Remove failed. ', e);
+//         });
 
 // Get data from database (firebase)
 // Method 1
@@ -67,12 +68,12 @@ database.ref('isSingle').remove()
 //         });
 
 // Method 2
-const onValueChange = database.ref()
-                            .on('value', (snapshot) => {
-                                console.log(snapshot.val());
-                            }, (e) => {
-                                console.log('Error with data fetching. ', e);
-                            });
+// const onValueChange = database.ref()
+//                             .on('value', (snapshot) => {
+//                                 console.log(snapshot.val());
+//                             }, (e) => {
+//                                 console.log('Error with data fetching. ', e);
+//                             });
 // setTimeout(() => {
 //     database.ref('age').set(27);
 // }, 3500);
@@ -105,3 +106,58 @@ const onValueChange = database.ref()
 //         }
 //     );
 // }, 3500);
+
+
+
+// Working with array in firebase (firebase doesn't support array)
+database.ref('expenses').push({
+    description: 'Gum',
+    note: '',
+    amount: 195,
+    createdAt: 0
+});
+database.ref('expenses').push({
+    description: 'Rent',
+    note: '',
+    amount: 1095,
+    createdAt: moment(0).subtract(4, 'days').valueOf()
+});
+database.ref('expenses').push({
+    ddescription: 'Credit Card',
+    note: '',
+    amount: 4500,
+    createdAt: moment(0).add(4, 'days').valueOf()
+});
+
+// value
+database.ref('expenses')
+        .on('value', (snapshot) => {
+            const expenses = [];
+
+            snapshot.forEach((childSnapshot) => {
+                expenses.push({
+                    id: childSnapshot.key,
+                    ...childSnapshot.val()
+                });
+            });
+
+            console.log(expenses);
+        });
+
+// child_removed
+database.ref('expenses')
+        .on('child_removed', (snapshot) => {
+            console.log(snapshot.key, snapshot.val());
+        });
+
+// child_changed
+database.ref('expenses')
+        .on('child_changed', (snapshot) => {
+            console.log(snapshot.key, snapshot.val());
+        });
+
+// child_added
+database.ref('expenses')
+        .on('child_added', (snapshot) => {
+            console.log(snapshot.key, snapshot.val());
+        });
